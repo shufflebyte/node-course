@@ -57,7 +57,9 @@ console.log(doors)
 console.log(somethingUndefined)
 // defaults only used if undefinded
 
-const transaction = (type, {label, stock}) => {
+// use default values to get no errors if destructuring undefined values!
+// with eg =0 or {foo, baar} = {}
+const transaction = (type, {label, stock = 0} = {}) => {
     console.log(type, label, stock);
 }
 
