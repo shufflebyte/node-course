@@ -75,3 +75,26 @@ app.listen(port, () => {
 
 // }
 // myFunction();
+
+// do something with the relationshop between task and user
+// const Task = require('./models/task');
+// const User = require('./models/user');
+
+// const main = async () => {
+//     // find owner by task
+//     // const task = await Task.findById('5f1ff072903fc89a946b91cc');
+//     // await task.populate('owner').execPopulate();
+//     // console.log(task.owner);
+
+//     // find user by id
+//     try{
+//         const user = await User.findById('5f1fe5c7a6ddcc987e746698');
+//         await user.populate('tasks').execPopulate();
+//         console.log(user.tasks);
+//     } catch(e) {
+//         console.log(e.message);
+//     }
+
+// };
+
+// main();

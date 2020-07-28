@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { ObjectID } = require('mongodb');
 
 const taskSchema = new mongoose.Schema(
     {
@@ -11,6 +12,11 @@ const taskSchema = new mongoose.Schema(
         completed: {
             type: Boolean,
             default: false
+        },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'User' // create a reference to another model
         }
     });
 
