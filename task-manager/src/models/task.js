@@ -18,6 +18,8 @@ const taskSchema = new mongoose.Schema(
             required: true,
             ref: 'User' // create a reference to another model
         }
+    }, {
+        timestamps: true
     });
 
 
