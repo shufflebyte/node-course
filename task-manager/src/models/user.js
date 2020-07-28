@@ -59,6 +59,16 @@ userSchema.methods.generateAuthToken = async function() {
     return token;
 };
 
+// toJSON wird überschrieben (toJSON wird immer aufgerufen bei res.send(...) oder console.log(...))
+userSchema.methods.toJSON = function() {
+    const user = this;
+    const userObject = user.toObject();
+    delete userObject.password;
+    delete userObject.tokens;
+    return userObject;
+
+};
+
 // Find a user by email and compare ptyped password with stored password
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email});
