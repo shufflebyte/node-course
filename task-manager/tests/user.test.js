@@ -4,26 +4,9 @@ const mongoose = require('mongoose');
 const app = require('../src/app');
 const User = require('../src/models/user');
 
-const userOneId = new mongoose.Types.ObjectId();
+const {userOneId, userOne, setupDatabase } = require('./fixtures/db');
 
-const userOne = {
-    _id: userOneId,
-    name: "Hugo Horst",
-    email: "hugo@horst.de",
-    password: "Sup3rS3cr3t",
-    tokens: [{
-        token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
-    }]
-};
-
-beforeEach(async () => {
-    await User.deleteMany();
-    await new User(userOne).save();
-});
-
-// afterEach(() => {
-//     console.log("after each");
-// });
+beforeEach(setupDatabase);
 
 test('should signup a new user', async () => {
     const response = await request(app).post('/users').send({
@@ -41,7 +24,7 @@ test('should signup a new user', async () => {
     expect(response.body).toMatchObject({
         user: {
             name: 'TestUser',
-            email: 'shufflebyte@googlemail.com',
+            email: 'shufflebyte@googlemail.com', 
         },
         token: user.tokens[0].token
     });
@@ -98,4 +81,39 @@ test('should not delete account for unauthenticated user', async () => {
         .delete('/users/me')
         .send()
         .expect(401);
+});
+
+test('sould upload avatar image', async () => {
+    await request(app)
+        .post('/users/me/avatar')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .attach('avatar', 'tests/fixtures/profile-pic.jpg')
+        .expect(200);
+
+    const user = await User.findById(userOneId);
+    // toBe works with === which compares if the objects are the same Blitz!
+    expect(user.avatar).toEqual(expect.any(Buffer));
+});
+
+test('should update valid user fields', async () => {
+    await request(app)
+        .patch('/users/me')
+        .set('Authorization', userOne.tokens[0].token)
+        .send({
+            name: 'Jess'
+        })
+        .expect(200);
+
+        const user = await User.findById(userOneId);
+        expect(user.name).toEqual('Jess');
+});
+
+test('should not update invalid user fields', async () => {
+    await request(app)
+        .patch('/users/me')
+        .set('Authorization', userOne.tokens[0].token)
+        .send({
+            location: 'Cologne'
+        })
+        .expect(400);
 });
