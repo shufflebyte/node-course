@@ -94,8 +94,9 @@ button:disabled {
     color: white;
     background: #333744;
     width: 225px;
-    overflow-y: scroll
+    overflow-y: scroll;
 }
+
 
 /* Chat styles */
 
@@ -177,6 +178,12 @@ button:disabled {
 }
 
 .users {
+    list-style-type: none;
+    font-weight: 300;
+    padding: 12px 24px 0 24px;
+}
+
+.rooms {
     list-style-type: none;
     font-weight: 300;
     padding: 12px 24px 0 24px;
