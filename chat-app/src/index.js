@@ -14,9 +14,25 @@ const pubDirPath = path.join(__dirname, '../public');
 
 app.use(express.static(pubDirPath));
 
-io.on('connection', () => {
+
+let count = 0; 
+
+io.on('connection', (socket) => {
     console.log('New WebSocket connection');
+
+    socket.emit('countUpdated', count);
+
+    socket.on('increment', () => {
+        count++;
+        //only sends to the requesting client..
+        //socket.emit('countUpdated', count);
+
+        // broadcasting to all clients
+        io.emit('countUpdated', count);
+    });
 });
+
+
 
 server.listen(port, () => {
     console.log("App started on port " + port);
